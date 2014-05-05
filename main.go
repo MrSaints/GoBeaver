@@ -10,28 +10,31 @@ import (
 const LSE_URL = "http://www.lse.ac.uk"
 var PROGRAMMES_URL = map[string]string {
     "Undergraduate":    LSE_URL + "/resources/calendar/courseGuides/undergraduate.htm",
-    "Graduate":         LSE_URL + "/resources/calendar/courseGuides/graduate.htm",
-    "Research":         LSE_URL + "/resources/calendar/courseGuides/research.htm",
+    //"Graduate":         LSE_URL + "/resources/calendar/courseGuides/graduate.htm",
+    //"Research":         LSE_URL + "/resources/calendar/courseGuides/research.htm",
 }
 
 type Course struct {
-    Code string
-    Title string
-    URL string
-    Department string
-    Students int
-    Class int
-    Value int
-    Program int
+    code string
+    title string
+    url string
+    department string
+    students int
+    class int
+    value int
+    program int
 }
 
-func Parse(Type string) (program_courses []interface{}) {
-    var program *goquery.Document
+func getDocument(url string) (program *goquery.Document) {
     var e error
-
-    if program, e = goquery.NewDocument(PROGRAMMES_URL[Type]); e != nil {
+    if program, e = goquery.NewDocument(url); e != nil {
         log.Fatal(e)
     }
+    return
+}
+
+func getCourses(Type string) (program_courses []Course) {
+    program := getDocument(PROGRAMMES_URL[Type])
 
     program.Find("table tr td p a").Each(func(i int, s *goquery.Selection) {
         course_item := strings.Split(s.Text(), " ")
@@ -40,19 +43,24 @@ func Parse(Type string) (program_courses []interface{}) {
         parsed_relative, _ := url.Parse(course_item_url)
 
         course_object := new(Course)
-        course_object.Code = course_item[0]
-        course_object.Title = course_item[1]
-        course_object.URL = parsed_url.ResolveReference(parsed_relative).String()
-        course_object.Program = 0 // TODO
-        program_courses = append(program_courses, course_object)
+        course_object.code = course_item[0]
+        course_object.title = course_item[1]
+        course_object.url = parsed_url.ResolveReference(parsed_relative).String()
+        course_object.program = 0 // TODO
+        program_courses = append(program_courses, *course_object)
     })
     return
 }
 
 func main() {
-    var courses []interface{}
+    var courses []Course
     for program, _ := range PROGRAMMES_URL {
-        courses = append(courses, Parse(program)...)
-        log.Printf("%s courses: %d", program, len(courses))
+        courses = append(courses, getCourses(program)...)
+    }
+    log.Printf("Total courses: %d", len(courses))
+
+    // Test
+    for _, test_c := range courses {
+        log.Print(test_c.Code())
     }
 }
