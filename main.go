@@ -43,7 +43,7 @@ func Parse(Type string) (program_courses []interface{}) {
         course_object.Code = course_item[0]
         course_object.Title = course_item[1]
         course_object.URL = parsed_url.ResolveReference(parsed_relative).String()
-        course_object.Program = 0
+        course_object.Program = 0 // TODO
         program_courses = append(program_courses, course_object)
     })
     return
