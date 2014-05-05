@@ -25,19 +25,18 @@ type Course struct {
     Program int
 }
 
-func main() {
+func Parse(Type string) (program_courses []interface{}) {
     var program *goquery.Document
     var e error
 
-    if program, e = goquery.NewDocument(PROGRAMMES_URL["Undergraduate"]); e != nil {
+    if program, e = goquery.NewDocument(PROGRAMMES_URL[Type]); e != nil {
         log.Fatal(e)
     }
 
-    var courses []interface{}
     program.Find("table tr td p a").Each(func(i int, s *goquery.Selection) {
         course_item := strings.Split(s.Text(), " ")
         course_item_url, _ := s.Attr("href")
-        parsed_url, _ := url.Parse(PROGRAMMES_URL["Undergraduate"])
+        parsed_url, _ := url.Parse(PROGRAMMES_URL[Type])
         parsed_relative, _ := url.Parse(course_item_url)
 
         course_object := new(Course)
@@ -45,6 +44,15 @@ func main() {
         course_object.Title = course_item[1]
         course_object.URL = parsed_url.ResolveReference(parsed_relative).String()
         course_object.Program = 0
-        courses = append(courses, course_object)
+        program_courses = append(program_courses, course_object)
     })
+    return
+}
+
+func main() {
+    var courses []interface{}
+    for program, _ := range PROGRAMMES_URL {
+        courses = append(courses, Parse(program)...)
+        log.Printf("%s courses: %d", program, len(courses))
+    }
 }
