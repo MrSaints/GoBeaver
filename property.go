@@ -1,8 +1,8 @@
 package main
 
 import (
-    "strings"
     "strconv"
+    "strings"
     "github.com/PuerkitoBio/goquery"
 )
 
