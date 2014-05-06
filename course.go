@@ -6,6 +6,10 @@ import (
     "github.com/PuerkitoBio/goquery"
 )
 
+// Course collection
+type Courses []Course
+
+// Course structure
 type Course struct {
     code string
     title string
@@ -17,7 +21,21 @@ type Course struct {
     program int
 }
 
-func getCourses(Type string) (program_courses []Course) {
+// Sort interface
+func (slice Courses) Len() int {
+    return len(slice)
+}
+
+func (slice Courses) Less(i, j int) bool {
+    return slice[i].code < slice[j].code;
+}
+
+func (slice Courses) Swap(i, j int) {
+    slice[i], slice[j] = slice[j], slice[i]
+}
+
+// Build course collection
+func getCourses(Type string) (program_courses Courses) {
     program := getDocument(PROGRAMMES_URL[Type])
 
     program.Find("table tr td p a").Each(func(i int, s *goquery.Selection) {

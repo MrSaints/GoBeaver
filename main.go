@@ -2,6 +2,7 @@ package main
 
 import (
     "log"
+    "sort"
     "github.com/PuerkitoBio/goquery"
 )
 
@@ -21,10 +22,11 @@ func getDocument(url string) (program *goquery.Document) {
 }
 
 func main() {
-    var courses []Course
+    var courses Courses
     for program, _ := range PROGRAMMES_URL {
         courses = append(courses, getCourses(program)...)
     }
+    sort.Sort(courses)
     log.Printf("Total courses: %d", len(courses))
 
     // Test

@@ -1,9 +1,11 @@
 package main
 
+// Build course properties
 func (this *Course) getProperties() {
-	
+
 }
 
+// Getters
 func (this *Course) Code() string {
 	return this.code
 }
