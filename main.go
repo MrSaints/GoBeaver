@@ -25,7 +25,7 @@ func GetDocument(url string) (program *goquery.Document) {
 func main() {
     var courses Courses
     for program, _ := range PROGRAMMES_URL {
-        courses = append(courses, GetCourses(program)...)
+        courses = append(courses, GetCourses(program, false)...)
     }
     sort.Sort(courses)
     log.Printf("Total courses: %d", len(courses))
@@ -33,7 +33,7 @@ func main() {
     // Test
     for _, test_c := range courses {
         log.Print(test_c)
-        test_c.GetProperties()
+        //test_c.GetProperties()
         /*log.Print(test_c.Teachers())
         log.Print(test_c.Availability())
         log.Print(test_c.Content())

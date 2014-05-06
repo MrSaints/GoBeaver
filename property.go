@@ -34,9 +34,9 @@ func (this *Course) GetProperties() *Course {
     return this
 }
 
-func FormatProperty(sel *goquery.Selection) string {
-    noHTML := strings.Join(sel.Map(func(i int, s *goquery.Selection) string {
+func FormatProperty(paragraphs *goquery.Selection) string {
+    no_html := strings.Join(paragraphs.Map(func(i int, s *goquery.Selection) string {
         return s.Text()
     }), "\n")
-    return strings.TrimSpace(noHTML)
+    return strings.TrimSpace(no_html)
 }

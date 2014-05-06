@@ -1,8 +1,10 @@
 package main
 
 import (
-    "strings"
+    "log"
     "net/url"
+    "strings"
+    "sync"
     "github.com/PuerkitoBio/goquery"
 )
 
@@ -29,13 +31,19 @@ type Course struct {
 }
 
 // Build course collection
-func GetCourses(Type string) (program_courses Courses) {
-    program := GetDocument(PROGRAMMES_URL[Type])
+func GetCourses(program_type string, lazyload bool) (program_courses Courses) {
+    var wg sync.WaitGroup
+    program := GetDocument(PROGRAMMES_URL[program_type])
+    courses := program.Find("table tr td p a")
 
-    program.Find("table tr td p a").Each(func(i int, s *goquery.Selection) {
+    if !lazyload {
+        wg.Add(courses.Length())
+    }
+
+    courses.Each(func(i int, s *goquery.Selection) {
         course_item := strings.Split(s.Text(), " ")
         course_item_url, _ := s.Attr("href")
-        parsed_url, _ := url.Parse(PROGRAMMES_URL[Type])
+        parsed_url, _ := url.Parse(PROGRAMMES_URL[program_type])
         parsed_relative, _ := url.Parse(course_item_url)
 
         course_object := new(Course)
@@ -43,16 +51,28 @@ func GetCourses(Type string) (program_courses Courses) {
         course_object.Title = course_item[1]
         course_object.URL = parsed_url.ResolveReference(parsed_relative).String()
 
-        if Type == "Graduate" {
+        if program_type == "Graduate" {
             course_object.Program = 1
-        } else if Type == "Research" {
+        } else if program_type == "Research" {
             course_object.Program = 2
         } else {
             course_object.Program = 0
         }
 
+        if !lazyload {
+            go func(course_object *Course) {
+                defer wg.Done()
+                course_object.GetProperties()
+            }(course_object)
+        }
+
         program_courses = append(program_courses, *course_object)
     })
+
+    if !lazyload {
+        wg.Wait()
+    }
+
     return
 }
 
