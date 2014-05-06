@@ -1,4 +1,4 @@
-package main
+package main // Rename in the future
 
 import (
     "log"
