@@ -18,7 +18,7 @@ type Course struct {
     students int
     class int
     value int
-    program int
+    program string
 }
 
 // Sort interface
@@ -48,7 +48,7 @@ func getCourses(Type string) (program_courses Courses) {
         course_object.code = course_item[0]
         course_object.title = course_item[1]
         course_object.url = parsed_url.ResolveReference(parsed_relative).String()
-        course_object.program = 0 // TODO
+        course_object.program = Type
         program_courses = append(program_courses, *course_object)
     })
     return

@@ -34,6 +34,6 @@ func (this *Course) Value() int {
 	return this.value
 }
 
-func (this *Course) Program() int {
+func (this *Course) Program() string {
 	return this.program
 }
