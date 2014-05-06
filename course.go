@@ -18,6 +18,13 @@ type Course struct {
     students int
     class int
     value float32
+    teachers []string // TODO: "Additional Teachers"
+    availability string // TODO: Store in array (compulsory, optional, others)
+    content string // TODO: Handle lists?
+    teaching string // TODO: Store in array (MT, LT, ST)
+    formative string
+    readings string
+    assessments string
     program int
 }
 

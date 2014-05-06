@@ -33,8 +33,13 @@ func main() {
     for _, test_c := range courses {
         //test_c.GetProperties()
         log.Print(test_c)
-        log.Print(test_c.Department())
-        log.Print(test_c)
+        log.Print(test_c.Teachers())
+        log.Print(test_c.Availability())
+        log.Print(test_c.Content())
+        log.Print(test_c.Teaching())
+        log.Print(test_c.Formative())
+        log.Print(test_c.Readings())
+        log.Print(test_c.Assessments())
         break
     }
 }
