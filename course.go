@@ -11,21 +11,21 @@ type Courses []Course
 
 // Course structure
 type Course struct {
-    code string
-    title string
-    url string
-    department string
-    students int
-    class int
-    value float32
-    teachers []string // TODO: "Additional Teachers"
-    availability string // TODO: Store in array (compulsory, optional, others)
-    content string // TODO: Handle lists?
-    teaching string // TODO: Store in array (MT, LT, ST)
-    formative string
-    readings string
-    assessments string
-    program int
+    Code string
+    Title string
+    URL string
+    Department string
+    Students int
+    Class int
+    Value float32
+    Teachers []string // TODO: "Additional Teachers"
+    Availability string // TODO: Store in array (compulsory, optional, others)
+    Content string // TODO: Handle lists?
+    Teaching string // TODO: Store in array (MT, LT, ST)
+    Formative string
+    Readings string
+    Assessments string
+    Program int
 }
 
 // Build course collection
@@ -39,16 +39,16 @@ func GetCourses(Type string) (program_courses Courses) {
         parsed_relative, _ := url.Parse(course_item_url)
 
         course_object := new(Course)
-        course_object.code = course_item[0]
-        course_object.title = course_item[1]
-        course_object.url = parsed_url.ResolveReference(parsed_relative).String()
+        course_object.Code = course_item[0]
+        course_object.Title = course_item[1]
+        course_object.URL = parsed_url.ResolveReference(parsed_relative).String()
 
         if Type == "Graduate" {
-            course_object.program = 1
+            course_object.Program = 1
         } else if Type == "Research" {
-            course_object.program = 2
+            course_object.Program = 2
         } else {
-            course_object.program = 0
+            course_object.Program = 0
         }
 
         program_courses = append(program_courses, *course_object)
@@ -62,7 +62,7 @@ func (slice Courses) Len() int {
 }
 
 func (slice Courses) Less(i, j int) bool {
-    return slice[i].code < slice[j].code;
+    return slice[i].Code < slice[j].Code;
 }
 
 func (slice Courses) Swap(i, j int) {
