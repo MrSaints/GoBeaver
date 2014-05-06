@@ -13,7 +13,7 @@ var PROGRAMMES_URL = map[string]string {
     //"Research":         LSE_URL + "/resources/calendar/courseGuides/research.htm",
 }
 
-func getDocument(url string) (program *goquery.Document) {
+func GetDocument(url string) (program *goquery.Document) {
     var e error
     if program, e = goquery.NewDocument(url); e != nil {
         log.Fatal(e)
@@ -24,13 +24,17 @@ func getDocument(url string) (program *goquery.Document) {
 func main() {
     var courses Courses
     for program, _ := range PROGRAMMES_URL {
-        courses = append(courses, getCourses(program)...)
+        courses = append(courses, GetCourses(program)...)
     }
     sort.Sort(courses)
     log.Printf("Total courses: %d", len(courses))
 
     // Test
     for _, test_c := range courses {
-        log.Print(test_c.Code())
+        //test_c.GetProperties()
+        log.Print(test_c)
+        log.Print(test_c.Department())
+        log.Print(test_c)
+        break
     }
 }
