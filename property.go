@@ -1,5 +1,9 @@
 package main
 
+func (this *Course) getProperties() {
+	
+}
+
 func (this *Course) Code() string {
 	return this.code
 }
@@ -31,4 +35,3 @@ func (this *Course) Value() int {
 func (this *Course) Program() int {
 	return this.program
 }
-
