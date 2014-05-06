@@ -3,6 +3,7 @@ package main // Rename in the future
 import (
     "log"
     "sort"
+    "encoding/json"
     "github.com/PuerkitoBio/goquery"
 )
 
@@ -31,15 +32,20 @@ func main() {
 
     // Test
     for _, test_c := range courses {
-        //test_c.GetProperties()
         log.Print(test_c)
-        log.Print(test_c.Teachers())
+        test_c.GetProperties()
+        /*log.Print(test_c.Teachers())
         log.Print(test_c.Availability())
         log.Print(test_c.Content())
         log.Print(test_c.Teaching())
         log.Print(test_c.Formative())
         log.Print(test_c.Readings())
-        log.Print(test_c.Assessments())
+        log.Print(test_c.Assessments())*/
+        test_json, e := json.Marshal(test_c)
+        if e != nil {
+            log.Fatal(e)
+        }
+        log.Print(string(test_json))
         break
     }
 }
