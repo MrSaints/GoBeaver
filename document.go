@@ -8,8 +8,8 @@ import (
 const LSE_URL = "http://www.lse.ac.uk"
 var PROGRAMMES_URL = map[string]string {
     "Undergraduate":    LSE_URL + "/resources/calendar/courseGuides/undergraduate.htm",
-    //"Graduate":         LSE_URL + "/resources/calendar/courseGuides/graduate.htm",
-    //"Research":         LSE_URL + "/resources/calendar/courseGuides/research.htm",
+    "Graduate":         LSE_URL + "/resources/calendar/courseGuides/graduate.htm",
+    "Research":         LSE_URL + "/resources/calendar/courseGuides/research.htm",
 }
 
 func GetDocument(url string) (program *goquery.Document) {
