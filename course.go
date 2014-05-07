@@ -3,12 +3,13 @@ package beaverguide
 import (
     "net/url"
     "strings"
+    "sort"
     "sync"
     "github.com/PuerkitoBio/goquery"
 )
 
 // Course collection
-type Courses []Course
+type Courses []*Course
 
 // Course structure
 type Course struct {
@@ -30,7 +31,7 @@ type Course struct {
     Program int
 }
 
-// Build course collection
+// Build course collection for a specified program
 func GetCourses(program_type string) (program_courses Courses) {
     var wg sync.WaitGroup
     program := GetDocument(PROGRAMMES_URL[program_type])
@@ -41,7 +42,7 @@ func GetCourses(program_type string) (program_courses Courses) {
     courses.Each(func(i int, s *goquery.Selection) {
         go func(s *goquery.Selection) {
             defer wg.Done()
-            course_item := strings.Split(s.Text(), " ")
+            course_item := strings.SplitN(s.Text(), " ", 2)
             course_item_url, _ := s.Attr("href")
             parsed_url, _ := url.Parse(PROGRAMMES_URL[program_type])
             parsed_relative, _ := url.Parse(course_item_url)
@@ -59,10 +60,27 @@ func GetCourses(program_type string) (program_courses Courses) {
                 course_object.Program = 0
             }
 
-            program_courses = append(program_courses, *course_object)
+            program_courses = append(program_courses, course_object)
         }(s)
     })
     wg.Wait()
+    return
+}
+
+// Build course collection for all programmes
+func GetAllCourses() (all_courses Courses) {
+    var wg sync.WaitGroup
+    wg.Add(len(PROGRAMMES_URL))
+
+    for program, _ := range PROGRAMMES_URL {
+        go func(program string) {
+            defer wg.Done()
+            all_courses = append(all_courses, GetCourses(program)...)
+        }(program)
+    }
+
+    wg.Wait()
+    sort.Sort(all_courses)
     return
 }
 
