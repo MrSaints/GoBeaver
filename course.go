@@ -20,7 +20,7 @@ type Course struct {
     Students int
     Class int
     Value float32
-    Teachers []string // TODO: "Additional Teachers"
+    Teachers []string // TODO: "Additional Teachers" and paragraphs
     Availability string // TODO: Store in array (compulsory, optional, others)
     Prerequisites string
     Content string // TODO: Handle lists?
