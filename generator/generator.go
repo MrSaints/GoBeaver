@@ -27,6 +27,8 @@ func DumpUndergraduate() {
 }
 
 func main() {
-    EC599 := gobeaver.GetCourse("EC599")
-    log.Print(EC599)
+    //EC599 := gobeaver.GetCourse("EC599")
+    //log.Print(EC599)
+
+    DumpUndergraduate()
 }
