@@ -3,10 +3,11 @@ package beaverguide
 import (
     "strconv"
     "strings"
+    "sync"
     "github.com/PuerkitoBio/goquery"
 )
 
-// Build course properties
+// Build properties for a course
 func (this *Course) GetProperties() *Course {
     course := GetDocument(this.URL)
     key_facts := course.Find("#keyFacts-Content p")
@@ -32,6 +33,22 @@ func (this *Course) GetProperties() *Course {
     this.Readings = FormatProperty(course.Find("#indicativeReading-Content p"))
     this.Assessments = FormatProperty(course.Find("#assessment-Content p"))
 
+    return this
+}
+
+// Build properties for all courses
+func (this Courses) GetProperties() Courses {
+    var wg sync.WaitGroup
+    wg.Add(len(this))
+
+    for _, course := range this {
+        go func(course *Course) {
+            defer wg.Done()
+            course.GetProperties()
+        }(course)
+    }
+
+    wg.Wait()
     return this
 }
 
