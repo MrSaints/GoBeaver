@@ -31,39 +31,70 @@ type Course struct {
     Program int
 }
 
+// Construct URL to course
+func BuildURL(absolute, relative string) string {
+    parsed_absolute, _ := url.Parse(absolute)
+    parsed_relative, _ := url.Parse(relative)
+    return parsed_absolute.ResolveReference(parsed_relative).String()
+}
+
+func ProgramAtoi(program_type string) (program_code int) {
+    if program_type == "Graduate" {
+        program_code = 1
+    } else if program_type == "Research" {
+        program_code = 2
+    } else {
+        program_code = 0
+    }
+    return
+}
+
+func BuildCourse(s *goquery.Selection, program_type string) (course *Course) {
+    course_item := strings.SplitN(s.Text(), " ", 2)
+    course_item_url, _ := s.Attr("href")
+
+    course = new(Course)
+    course.Code = course_item[0]
+    course.Title = course_item[1]
+    course.URL = BuildURL(PROGRAMMES_URL[program_type], course_item_url)
+    course.Program = ProgramAtoi(program_type)
+    return
+}
+
+func GetCourse(code string) (course *Course) {
+    done := make(chan bool)
+
+    for program_type, program_url := range PROGRAMMES_URL {
+        go func(program_type string, program_url string) {
+            courses := GetDocument(program_url).Find("table tr td p a[href*=\""+ code +"\"]")
+
+            if courses.Length() > 0 {
+                course = BuildCourse(courses.First(), program_type)
+                course.GetProperties()
+                done <- true
+            }
+        }(program_type, program_url)
+    }
+
+    <-done
+    return
+}
+
 // Build course collection for a specified program
 func GetCourses(program_type string) (program_courses Courses) {
     var wg sync.WaitGroup
-    program := GetDocument(PROGRAMMES_URL[program_type])
-    courses := program.Find("table tr td p a")
-
+    courses := GetDocument(PROGRAMMES_URL[program_type]).Find("table tr td p a")
     wg.Add(courses.Length())
 
     courses.Each(func(i int, s *goquery.Selection) {
         go func(s *goquery.Selection) {
             defer wg.Done()
-            course_item := strings.SplitN(s.Text(), " ", 2)
-            course_item_url, _ := s.Attr("href")
-            parsed_url, _ := url.Parse(PROGRAMMES_URL[program_type])
-            parsed_relative, _ := url.Parse(course_item_url)
-
-            course_object := new(Course)
-            course_object.Code = course_item[0]
-            course_object.Title = course_item[1]
-            course_object.URL = parsed_url.ResolveReference(parsed_relative).String()
-
-            if program_type == "Graduate" {
-                course_object.Program = 1
-            } else if program_type == "Research" {
-                course_object.Program = 2
-            } else {
-                course_object.Program = 0
-            }
-
-            program_courses = append(program_courses, course_object)
+            program_courses = append(program_courses, BuildCourse(s, program_type))
         }(s)
     })
+
     wg.Wait()
+    sort.Sort(program_courses)
     return
 }
 

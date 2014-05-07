@@ -7,7 +7,7 @@ import (
     "github.com/PuerkitoBio/goquery"
 )
 
-// Build properties for a course
+// Build properties for a course (TODO: Implement channels?)
 func (this *Course) GetProperties() *Course {
     course := GetDocument(this.URL)
     key_facts := course.Find("#keyFacts-Content p")
