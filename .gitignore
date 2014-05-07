@@ -54,3 +54,7 @@ $RECYCLE.BIN/
 
 #sftp configuration file
 sftp-config.json
+
+
+### Beaver Guide Generator ###
+*_dump.json
