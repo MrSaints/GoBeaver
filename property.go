@@ -1,4 +1,4 @@
-package main
+package beaverguide
 
 import (
     "strconv"
@@ -25,6 +25,7 @@ func (this *Course) GetProperties() *Course {
     this.Teachers = strings.Split(teachers, ", ")
 
     this.Availability = FormatProperty(course.Find("#availability-Content p"))
+    this.Prerequisites = FormatProperty(course.Find("#preRequisites-Content p"))
     this.Content = FormatProperty(course.Find("#courseContent-Content p"))
     this.Teaching = FormatProperty(course.Find("#teaching-Content p"))
     this.Formative = FormatProperty(course.Find("#formativeCoursework-Content p"))

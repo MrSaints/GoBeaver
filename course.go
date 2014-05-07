@@ -1,4 +1,4 @@
-package main
+package beaverguide
 
 import (
     "net/url"
@@ -21,6 +21,7 @@ type Course struct {
     Value float32
     Teachers []string // TODO: "Additional Teachers"
     Availability string // TODO: Store in array (compulsory, optional, others)
+    Prerequisites string
     Content string // TODO: Handle lists?
     Teaching string // TODO: Store in array (MT, LT, ST)
     Formative string
