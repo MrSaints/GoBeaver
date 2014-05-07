@@ -7,9 +7,9 @@ import (
     "github.com/MrSaints/gobeaver"
 )
 
-func main() {
-    courses := gobeaver.GetCourses("Undergraduate")
+func DumpUndergraduate() {
     //courses := gobeaver.GetAllCourses()
+    courses := gobeaver.GetCourses("Undergraduate")
     log.Printf("Total courses: %d", len(courses))
     courses.GetProperties()
 
@@ -24,4 +24,9 @@ func main() {
     }
 
     log.Print("Complete!")
+}
+
+func main() {
+    EC599 := gobeaver.GetCourse("EC599")
+    log.Print(EC599)
 }
