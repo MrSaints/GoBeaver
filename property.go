@@ -1,4 +1,4 @@
-package beaverguide
+package gobeaver
 
 import (
     "strconv"

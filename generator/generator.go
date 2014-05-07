@@ -4,12 +4,12 @@ import (
     "encoding/json"
     "io/ioutil"
     "log"
-    "github.com/MrSaints/beaverguide"
+    "github.com/MrSaints/gobeaver"
 )
 
 func main() {
-    courses := beaverguide.GetCourses("Undergraduate")
-    //courses := beaverguide.GetAllCourses()
+    courses := gobeaver.GetCourses("Undergraduate")
+    //courses := gobeaver.GetAllCourses()
     log.Printf("Total courses: %d", len(courses))
     courses.GetProperties()
 
