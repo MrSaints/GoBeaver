@@ -20,7 +20,7 @@ type Course struct {
     Students int
     Class int
     Value float32
-    Teachers []string // TODO: "Additional Teachers" and paragraphs
+    Teachers []string // TODO: "Additional Teachers" and paragraphs (regexp)
     Availability string // TODO: Store in array (compulsory, optional, others)
     Prerequisites string
     Content string // TODO: Handle lists?
@@ -61,6 +61,7 @@ func BuildCourse(s *goquery.Selection, program_type string) (course *Course) {
     return
 }
 
+// Get information for a specified course using a course code
 func GetCourse(code string) (course *Course) {
     done := make(chan bool)
 
